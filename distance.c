@@ -1,5 +1,7 @@
 #include <math.h>
 
+#define earthRadiusKm 6371.0
+
 double deg2rad(double deg) {
     return (deg * M_PI / 180);
 }
