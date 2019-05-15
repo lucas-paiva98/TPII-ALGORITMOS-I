@@ -8,12 +8,18 @@
 int minKey(int key[], int mstSet[], int vertices) { 
 	// Initialize min value 
 	int min = INT_MAX, min_index; 
-  
+
 	for (int v = 0; v < vertices; v++) 
-			if (mstSet[v] == 0 && key[v] < min) 
-					min = key[v], min_index = v; 
+	 	if (mstSet[v] == 0 && key[v] < min) 
+      min = key[v], min_index = v; 
 		
 	return min_index; 
+} 
+
+int printMST(int parent[], int n, double **graph, int vertices) { 
+printf("Edge \tWeight\n"); 
+for (int i = 1; i < vertices; i++) 
+    printf("%d - %d \t%lf \n", parent[i], i, graph[i][parent[i]]); 
 } 
 
 void primMST(double **graph, int vertices) { 
@@ -57,7 +63,7 @@ void primMST(double **graph, int vertices) {
     } 
   
     // print the constructed MST 
-    // printMST(parent, V, graph); 
+    printMST(parent, vertices, graph, vertices); 
 } 
 
 int main(int argc, char const *argv[]) {
@@ -115,6 +121,8 @@ int main(int argc, char const *argv[]) {
 		}
 		printf("\n");
 	}
+
+  primMST(graph, citiesQuantity);
 
 	return 0;
 }
