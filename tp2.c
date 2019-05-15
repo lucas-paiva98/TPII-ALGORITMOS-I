@@ -28,8 +28,9 @@ void primMST(double **graph, int vertices) {
     // Key values used to pick minimum weight edge in cut 
     int key[vertices];  
     // To represent set of vertices not yet included in MST 
-    int mstSet[vertices];  
-  
+    int mstSet[vertices];
+	int largestEdge = 0;
+
     // Initialize all keys as INFINITE 
     for (int i = 0; i < vertices; i++) 
         key[i] = INT_MAX, mstSet[i] = 0; 
@@ -40,8 +41,7 @@ void primMST(double **graph, int vertices) {
     parent[0] = -1; // First node is always root of MST  
   
     // The MST will have V vertices 
-    for (int count = 0; count < vertices-1; count++) 
-    { 
+    for (int count = 0; count < vertices-1; count++) { 
         // Pick the minimum key vertex from the  
         // set of vertices not yet included in MST 
         int u = minKey(key, mstSet, vertices); 
@@ -53,15 +53,23 @@ void primMST(double **graph, int vertices) {
         // the adjacent vertices of the picked vertex.  
         // Consider only those vertices which are not  
         // yet included in MST 
-        for (int v = 0; v < vertices; v++) 
+        for (int v = 0; v < vertices; v++) {
+			// graph[u][v] is non zero only for adjacent vertices of m 
+			// mstSet[v] is false for vertices not yet included in MST 
+			// Update the key only if graph[u][v] is smaller than key[v] 
+			if (graph[u][v] && mstSet[v] == 0 && graph[u][v] < key[v]) {
+				parent[v] = u, key[v] = graph[u][v];
+			}
+			printf("%d \n", key[v]);
+		}
   
-        // graph[u][v] is non zero only for adjacent vertices of m 
-        // mstSet[v] is false for vertices not yet included in MST 
-        // Update the key only if graph[u][v] is smaller than key[v] 
-        if (graph[u][v] && mstSet[v] == 0 && graph[u][v] < key[v]) 
-            parent[v] = u, key[v] = graph[u][v]; 
+        
     } 
-  
+	
+	for (int i = 1; i < vertices; i++) {
+		printf("EDGE: %d\n", key[i]);	
+	}
+
     // print the constructed MST 
     printMST(parent, vertices, graph, vertices); 
 } 
@@ -115,12 +123,12 @@ int main(int argc, char const *argv[]) {
 		printf("\n");
 		printf("\n");
 
-	for (int i = 0; i < citiesQuantity; i++) {
-		for (int j = 0; j < citiesQuantity; j++) {
-			printf("%lf ", graph[i][j]);
-		}
-		printf("\n");
-	}
+	// for (int i = 0; i < citiesQuantity; i++) {
+	// 	for (int j = 0; j < citiesQuantity; j++) {
+	// 		printf("%lf ", graph[i][j]);
+	// 	}
+	// 	printf("\n");
+	// }
 
   primMST(graph, citiesQuantity);
 
