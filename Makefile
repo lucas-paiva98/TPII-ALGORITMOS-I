@@ -2,10 +2,10 @@ CC=gcc
 
 
 all: tp2
-tp2: distance.o
-distance.o: tp2.c distance.h distance.h
+tp2: utils.o
+utils.o: tp2.c utils.h utils.h
 
 clean:
-		rm -f tp2 distance.o
+		rm -f tp2 utils.o
 run: tp2
 		./tp2
