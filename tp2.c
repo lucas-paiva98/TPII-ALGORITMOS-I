@@ -24,12 +24,13 @@ for (int i = 1; i < vertices; i++)
 
 void primMST(double **graph, int vertices) { 
     // Array to store constructed MST 
-    int parent[vertices];  
+    int parent[vertices];
     // Key values used to pick minimum weight edge in cut 
     int key[vertices];  
     // To represent set of vertices not yet included in MST 
     int mstSet[vertices];
 	int largestEdge = 0;
+	int largestEdgeIndex = ;
 
     // Initialize all keys as INFINITE 
     for (int i = 0; i < vertices; i++) 
@@ -45,7 +46,6 @@ void primMST(double **graph, int vertices) {
         // Pick the minimum key vertex from the  
         // set of vertices not yet included in MST 
         int u = minKey(key, mstSet, vertices); 
-  
         // Add the picked vertex to the MST Set 
         mstSet[u] = 1; 
   
@@ -59,8 +59,19 @@ void primMST(double **graph, int vertices) {
 			// Update the key only if graph[u][v] is smaller than key[v] 
 			if (graph[u][v] && mstSet[v] == 0 && graph[u][v] < key[v]) {
 				parent[v] = u, key[v] = graph[u][v];
+				printf("KEY[%d]: %d \n", count, key[v]);
+				if (key[v] > largestEdge) {
+						if (largestEdgeIndex == -1 && largestEdge == 0) {
+							largestEdge = key[v];
+							largestEdgeIndex = v;
+						} 
+						else if (largestEdgeIndex != -1) {
+
+						}
+				}
 			}
-			printf("%d \n", key[v]);
+			// printf("MIN KEY: %d\n", u);	
+			// printf("%d \n", key[v]);
 		}
   
         
@@ -80,6 +91,7 @@ int main(int argc, char const *argv[]) {
 	double **citiesMatrix;
 	double citiesAux = 0;
 
+	// TODO Add the file manipulation to a function
 	// fileCities = fopen(argv[1], "r");
 	fileCities = fopen("cidades1.txt", "r");
 
@@ -123,6 +135,9 @@ int main(int argc, char const *argv[]) {
 		printf("\n");
 		printf("\n");
 
+		/*****************************************************************************
+		 TODO Add -lm at the end of the command that runs the project(to run in Linux)
+		******************************************************************************/
 	// for (int i = 0; i < citiesQuantity; i++) {
 	// 	for (int j = 0; j < citiesQuantity; j++) {
 	// 		printf("%lf ", graph[i][j]);
