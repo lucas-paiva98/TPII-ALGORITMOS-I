@@ -5,84 +5,63 @@
 #include "distance.h"
 
 
-int minKey(int key[], int mstSet[], int vertices) { 
+int findMinVertex(int key[], int mstSet[], int vertex) { 
 	// Initialize min value 
 	int min = INT_MAX, min_index; 
 
-	for (int v = 0; v < vertices; v++) 
+	for (int v = 0; v < vertex; v++) 
 	 	if (mstSet[v] == 0 && key[v] < min) 
       min = key[v], min_index = v; 
-		
+
 	return min_index; 
 } 
 
-int printMST(int parent[], int n, double **graph, int vertices) { 
-printf("Edge \tWeight\n"); 
-for (int i = 1; i < vertices; i++) 
-    printf("%d - %d \t%lf \n", parent[i], i, graph[i][parent[i]]); 
-} 
-
-void primMST(double **graph, int vertices) { 
-    // Array to store constructed MST 
-    int parent[vertices];
-    // Key values used to pick minimum weight edge in cut 
-    int key[vertices];  
-    // To represent set of vertices not yet included in MST 
-    int mstSet[vertices];
+void primMST(int **graph, int vertex) { 
+  // Array to store constructed MST 
+  int MBST[vertex];
+  // Key values used to pick minimum weight edge in cut 
+  int key[vertex];  
+  // To represent set of vertex not yet included in MST 
+  int mstSet[vertex];
 	int largestEdge = 0;
-	int largestEdgeIndex = ;
 
     // Initialize all keys as INFINITE 
-    for (int i = 0; i < vertices; i++) 
+    for (int i = 0; i < vertex; i++) 
         key[i] = INT_MAX, mstSet[i] = 0; 
   
     // Always include first 1st vertex in MST. 
     // Make key 0 so that this vertex is picked as first vertex. 
     key[0] = 0;      
-    parent[0] = -1; // First node is always root of MST  
+    MBST[0] = -1; // First node is always root of MST  
   
-    // The MST will have V vertices 
-    for (int count = 0; count < vertices-1; count++) { 
+    // The MST will have V vertex 
+    for (int i = 0; i < vertex; i++) { 
         // Pick the minimum key vertex from the  
-        // set of vertices not yet included in MST 
-        int u = minKey(key, mstSet, vertices); 
+        // set of vertex not yet included in MST 
+        int minVertex = findMinVertex(key, mstSet, vertex); 
         // Add the picked vertex to the MST Set 
-        mstSet[u] = 1; 
-  
-        // Update key value and parent index of  
-        // the adjacent vertices of the picked vertex.  
-        // Consider only those vertices which are not  
+        mstSet[minVertex] = 1; 
+  			
+  			if (largestEdge < key[minVertex]) {
+  				largestEdge = key[minVertex];
+  			}
+
+        // Update key value and MBST index of  
+        // the adjacent vertex of the picked vertex.  
+        // Consider only those vertex which are not  
         // yet included in MST 
-        for (int v = 0; v < vertices; v++) {
-			// graph[u][v] is non zero only for adjacent vertices of m 
-			// mstSet[v] is false for vertices not yet included in MST 
-			// Update the key only if graph[u][v] is smaller than key[v] 
-			if (graph[u][v] && mstSet[v] == 0 && graph[u][v] < key[v]) {
-				parent[v] = u, key[v] = graph[u][v];
-				printf("KEY[%d]: %d \n", count, key[v]);
-				if (key[v] > largestEdge) {
-						if (largestEdgeIndex == -1 && largestEdge == 0) {
-							largestEdge = key[v];
-							largestEdgeIndex = v;
-						} 
-						else if (largestEdgeIndex != -1) {
-
-						}
+      for (int v = 0; v < vertex; v++) {
+				// graph[minVertex][v] is non zero only for adjacent vertex of m 
+				// mstSet[v] is false for vertex not yet included in MST 
+				// Update the key only if graph[minVertex][v] is smaller than key[v] 
+				if (graph[minVertex][v] && mstSet[v] == 0 && graph[minVertex][v] < key[v]) {
+					MBST[v] = minVertex;
+					key[v] = graph[minVertex][v];
 				}
-			}
-			// printf("MIN KEY: %d\n", u);	
-			// printf("%d \n", key[v]);
-		}
+		}      
+  } 
   
-        
-    } 
-	
-	for (int i = 1; i < vertices; i++) {
-		printf("EDGE: %d\n", key[i]);	
-	}
-
-    // print the constructed MST 
-    printMST(parent, vertices, graph, vertices); 
+  printf("%d\n", largestEdge);
 } 
 
 int main(int argc, char const *argv[]) {
@@ -91,9 +70,8 @@ int main(int argc, char const *argv[]) {
 	double **citiesMatrix;
 	double citiesAux = 0;
 
-	// TODO Add the file manipulation to a function
-	// fileCities = fopen(argv[1], "r");
-	fileCities = fopen("cidades1.txt", "r");
+	fileCities = fopen(argv[1], "r");
+	// fileCities = fopen("t1.txt", "r");
 
 	if (fileCities == NULL) {
     printf("Error! Cant't open the file.\n");
@@ -102,7 +80,7 @@ int main(int argc, char const *argv[]) {
 
 	fscanf(fileCities, "%d", &citiesQuantity);
 
-	citiesMatrix = allocateMatrix(citiesQuantity, 2);
+	citiesMatrix = allocateMatrixDouble(citiesQuantity, 2);
 
 	for (int i = 0; i < citiesQuantity; i++) {
 		for (int j = 0; j < 2; j++) {
@@ -111,15 +89,13 @@ int main(int argc, char const *argv[]) {
 		}
 	}
 
-	// Montar o grafo
-	double **graph;
+	int **graph;
 	double lat = 0;
 	double lon = 0;
-	double distance = 0;
+	int distance = 0;
 	int citiesQuantityCol = 1;
 
 	graph = allocateMatrix(citiesQuantity, citiesQuantity);
-	
 	
 	for (int i = 0; i < citiesQuantity; i++) {
 		lat = citiesMatrix[i][0];
@@ -131,19 +107,6 @@ int main(int argc, char const *argv[]) {
 		}
 		citiesQuantityCol++;
 	}
-
-		printf("\n");
-		printf("\n");
-
-		/*****************************************************************************
-		 TODO Add -lm at the end of the command that runs the project(to run in Linux)
-		******************************************************************************/
-	// for (int i = 0; i < citiesQuantity; i++) {
-	// 	for (int j = 0; j < citiesQuantity; j++) {
-	// 		printf("%lf ", graph[i][j]);
-	// 	}
-	// 	printf("\n");
-	// }
 
   primMST(graph, citiesQuantity);
 

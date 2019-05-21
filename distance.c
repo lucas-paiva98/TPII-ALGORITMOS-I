@@ -1,4 +1,4 @@
-#include <math.h>
+#include "distance.h"
 
 #define earthRadiusKm 6371.0
 

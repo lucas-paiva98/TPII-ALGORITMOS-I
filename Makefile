@@ -1,11 +1,18 @@
-CC=gcc
+CC := gcc
 
+all: tp2.out
 
-all: tp2
-tp2: utils.o
-utils.o: tp2.c utils.h utils.h
+tp2.out: utils.o distance.o
+	$(CC) utils.o distance.o tp2.c -o tp2.out -lm
+
+utils.o: utils.c
+	$(CC) -c utils.c -o utils.o
+
+distance.o: distance.c
+	$(CC) -c distance.c -o distance.o
 
 clean:
-		rm -f tp2 utils.o
-run: tp2
-		./tp2
+	rm -f tp2 utils.o distance.o
+
+run:
+	./tp2.out $(BLA)

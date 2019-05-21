@@ -1,5 +1,8 @@
-double **allocateMatrix(int lines, int collumns);
+#include <stdio.h>
+#include <stdlib.h>
 
-int **allocateMatrixInt(int lines, int collumns);
+double **allocateMatrixDouble(int lines, int collumns);
+
+int **allocateMatrix(int lines, int collumns);
 
 int *allocateVector(int size);

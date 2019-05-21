@@ -1,8 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "utils.h"
 
-double **allocateMatrix(int lines, int collumns) {
+double **allocateMatrixDouble(int lines, int collumns) {
   double **matrix = (double **)malloc(lines * sizeof(double *));
 
   for (int i = 0; i < lines; i++) {
@@ -14,7 +12,7 @@ double **allocateMatrix(int lines, int collumns) {
   return matrix;
 }
 
-int **allocateMatrixInt(int lines, int collumns) {
+int **allocateMatrix(int lines, int collumns) {
   int **matrix = (int **)malloc(lines * sizeof(int *));
 
   for (int i = 0; i < lines; i++) {
