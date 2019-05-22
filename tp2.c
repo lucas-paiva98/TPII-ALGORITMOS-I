@@ -3,27 +3,28 @@
 #include <limits.h>
 #include "utils.h"
 #include "distance.h"
-
+#include <time.h>
 
 int findMinVertex(int key[], int mstSet[], int vertex) { 
-	// Initialize min value 
-	int min = INT_MAX, min_index; 
+	int min = INT_MAX;
+	int minIndex; 
 
-	for (int v = 0; v < vertex; v++) 
-	 	if (mstSet[v] == 0 && key[v] < min) 
-      min = key[v], min_index = v; 
-
-	return min_index; 
+	for (int v = 0; v < vertex; v++) {
+		if (mstSet[v] == 0 && key[v] < min) {
+      min = key[v];
+      minIndex = v;
+		} 
+	} 
+	 	 
+	return minIndex; 
 } 
 
 void primMST(int **graph, int vertex) { 
-  // Array to store constructed MST 
-  int MBST[vertex];
   // Key values used to pick minimum weight edge in cut 
   int key[vertex];  
   // To represent set of vertex not yet included in MST 
   int mstSet[vertex];
-	int largestEdge = 0;
+	int maxEdge = 0;
 
     // Initialize all keys as INFINITE 
     for (int i = 0; i < vertex; i++) 
@@ -32,7 +33,7 @@ void primMST(int **graph, int vertex) {
     // Always include first 1st vertex in MST. 
     // Make key 0 so that this vertex is picked as first vertex. 
     key[0] = 0;      
-    MBST[0] = -1; // First node is always root of MST  
+    // MBST[0] = -1; // First node is always root of MST  
   
     // The MST will have V vertex 
     for (int i = 0; i < vertex; i++) { 
@@ -42,8 +43,8 @@ void primMST(int **graph, int vertex) {
         // Add the picked vertex to the MST Set 
         mstSet[minVertex] = 1; 
   			
-  			if (largestEdge < key[minVertex]) {
-  				largestEdge = key[minVertex];
+  			if (maxEdge < key[minVertex]) {
+  				maxEdge = key[minVertex];
   			}
 
         // Update key value and MBST index of  
@@ -55,13 +56,12 @@ void primMST(int **graph, int vertex) {
 				// mstSet[v] is false for vertex not yet included in MST 
 				// Update the key only if graph[minVertex][v] is smaller than key[v] 
 				if (graph[minVertex][v] && mstSet[v] == 0 && graph[minVertex][v] < key[v]) {
-					MBST[v] = minVertex;
 					key[v] = graph[minVertex][v];
 				}
 		}      
   } 
   
-  printf("%d\n", largestEdge);
+  printf("%d\n", maxEdge);
 } 
 
 int main(int argc, char const *argv[]) {
@@ -69,9 +69,13 @@ int main(int argc, char const *argv[]) {
 	int citiesQuantity = 0;
 	double **citiesMatrix;
 	double citiesAux = 0;
+	
+	double total_time;
+	clock_t start, end;
+	
+	start = clock();
 
 	fileCities = fopen(argv[1], "r");
-	// fileCities = fopen("t1.txt", "r");
 
 	if (fileCities == NULL) {
     printf("Error! Cant't open the file.\n");
@@ -109,6 +113,8 @@ int main(int argc, char const *argv[]) {
 	}
 
   primMST(graph, citiesQuantity);
-
+  end = clock();
+  total_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("\nTime is: %f\n", total_time);
 	return 0;
 }
