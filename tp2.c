@@ -5,13 +5,13 @@
 #include "distance.h"
 #include <time.h>
 
-int findMinVertex(int key[], int mstSet[], int vertex) { 
+int findMinVertex(int minWeight[], int notInMBST[], int vertex) { 
 	int min = INT_MAX;
 	int minIndex; 
 
 	for (int v = 0; v < vertex; v++) {
-		if (mstSet[v] == 0 && key[v] < min) {
-      min = key[v];
+		if (notInMBST[v] == 0 && minWeight[v] < min) {
+      min = minWeight[v];
       minIndex = v;
 		} 
 	} 
@@ -19,44 +19,44 @@ int findMinVertex(int key[], int mstSet[], int vertex) {
 	return minIndex; 
 } 
 
-void primMST(int **graph, int vertex) { 
+void primMBST(int **graph, int vertex) { 
   // Key values used to pick minimum weight edge in cut 
-  int key[vertex];  
+  int minWeight[vertex];  
   // To represent set of vertex not yet included in MST 
-  int mstSet[vertex];
+  int notInMBST[vertex];
 	int maxEdge = 0;
 
-    // Initialize all keys as INFINITE 
+    // Initialize all minWeights as INFINITE 
     for (int i = 0; i < vertex; i++) 
-        key[i] = INT_MAX, mstSet[i] = 0; 
+        minWeight[i] = INT_MAX, notInMBST[i] = 0; 
   
     // Always include first 1st vertex in MST. 
-    // Make key 0 so that this vertex is picked as first vertex. 
-    key[0] = 0;      
+    // Make minWeight 0 so that this vertex is picked as first vertex. 
+    minWeight[0] = 0;      
     // MBST[0] = -1; // First node is always root of MST  
   
     // The MST will have V vertex 
     for (int i = 0; i < vertex; i++) { 
-        // Pick the minimum key vertex from the  
+        // Pick the minimum minWeight vertex from the  
         // set of vertex not yet included in MST 
-        int minVertex = findMinVertex(key, mstSet, vertex); 
+        int minVertex = findMinVertex(minWeight, notInMBST, vertex); 
         // Add the picked vertex to the MST Set 
-        mstSet[minVertex] = 1; 
+        notInMBST[minVertex] = 1; 
   			
-  			if (maxEdge < key[minVertex]) {
-  				maxEdge = key[minVertex];
+  			if (maxEdge < minWeight[minVertex]) {
+  				maxEdge = minWeight[minVertex];
   			}
 
-        // Update key value and MBST index of  
+        // Update minWeight value and MBST index of  
         // the adjacent vertex of the picked vertex.  
         // Consider only those vertex which are not  
         // yet included in MST 
       for (int v = 0; v < vertex; v++) {
 				// graph[minVertex][v] is non zero only for adjacent vertex of m 
-				// mstSet[v] is false for vertex not yet included in MST 
-				// Update the key only if graph[minVertex][v] is smaller than key[v] 
-				if (graph[minVertex][v] && mstSet[v] == 0 && graph[minVertex][v] < key[v]) {
-					key[v] = graph[minVertex][v];
+				// notInMBST[v] is false for vertex not yet included in MST 
+				// Update the minWeight only if graph[minVertex][v] is smaller than minWeight[v] 
+				if (graph[minVertex][v] && notInMBST[v] == 0 && graph[minVertex][v] < minWeight[v]) {
+					minWeight[v] = graph[minVertex][v];
 				}
 		}      
   } 
@@ -112,7 +112,7 @@ int main(int argc, char const *argv[]) {
 		citiesQuantityCol++;
 	}
 
-  primMST(graph, citiesQuantity);
+  primMBST(graph, citiesQuantity);
   end = clock();
   total_time = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("\nTime is: %f\n", total_time);
